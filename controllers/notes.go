@@ -1,6 +1,8 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 type NotesController struct {
 }
@@ -13,7 +15,9 @@ func (n *NotesController) InitNotesControllerRoutes(router *gin.Engine) {
 }
 
 func (n *NotesController) GetNotes() gin.HandlerFunc {
+
 	return func(c *gin.Context) {
+
 		c.JSON(200, gin.H{
 			"notes": "Get Request Notes",
 		})
