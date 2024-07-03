@@ -9,7 +9,7 @@ import (
 func main() {
 	router := gin.Default()
 
-	notesController := controllers.NotesController{}
+	notesController := &controllers.NotesController{}
 	notesController.InitNotesControllerRoutes(router)
 
 	router.Run(":8200")

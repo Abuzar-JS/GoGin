@@ -1,0 +1,7 @@
+versio: "3.2"
+services:
+ db:
+
+ POSTGRES_USER = postgres
+ POSTGRES_PASSWORD = 1234
+ POSTGRES_DB = GormGin
