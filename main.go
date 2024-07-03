@@ -15,7 +15,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/PING", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"Hello": "Abuzar G from Lahore",
+			"Hello": "Abuzar from Lahore",
 		})
 	})
 
@@ -49,7 +49,7 @@ func main() {
 
 	})
 
-	router.PUT("/test", func(c *gin.Context) {
+	router.PATCH("/test", func(c *gin.Context) {
 		// Email and Pass
 
 		type TestRequest struct {
@@ -70,5 +70,16 @@ func main() {
 		})
 
 	})
+
+	router.DELETE("/test/:id", func(c *gin.Context) {
+		id := c.Param("id")
+
+		c.JSON(http.StatusOK, gin.H{
+			"id":      id,
+			"message": "deleted!!",
+		})
+
+	})
+
 	router.Run(":8405")
 }
