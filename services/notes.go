@@ -1,6 +1,17 @@
 package services
 
+import (
+	internal "GinMod/internal/model"
+	"gorm.io/gorm"
+)
+
 type NotesService struct {
+	db *gorm.DB
+}
+
+func (n *NotesService) InitService(database *gorm.DB) {
+	n.db = database
+	n.db.AutoMigrate(&internal.Notes{})
 }
 
 type Note struct {
@@ -17,10 +28,9 @@ func (n *NotesService) GetNotesService() []Note {
 	return data
 }
 
-func (n *NotesService) PostNotesService() []Note {
-	data := []Note{
-		{Id: 3, Name: "Note 3"},
-		{Id: 4, Name: "Note 4"},
+func (n *NotesService) CreateNotesService() Note {
+	data := Note{
+		Id: 3, Name: "Note 3",
 	}
 
 	return data

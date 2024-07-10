@@ -1,16 +1,20 @@
 package main
 
 import (
-	"GinMod/controllers"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
 	router := gin.Default()
 
-	notesController := &controllers.NotesController{}
-	notesController.InitNotesControllerRoutes(router)
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong from gin",
+		})
+	})
 
-	router.Run(":8200")
+	router.Run(":8000")
 }

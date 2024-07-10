@@ -39,7 +39,7 @@ func (n *NotesController) PutNotes() gin.HandlerFunc {
 func (n *NotesController) CreateNotes() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"notes": n.notesService.PostNotesService(),
+			"notes": n.notesService.CreateNotesService(),
 		})
 	}
 }
