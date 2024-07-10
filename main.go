@@ -1,7 +1,7 @@
 package main
 
 import (
-	"net/http"
+	"GinMod/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,11 +10,8 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong from gin",
-		})
-	})
+	UserController := &controllers.UserController{}
+	UserController.InitUserControllerRoutes(router)
 
 	router.Run(":8000")
 }
