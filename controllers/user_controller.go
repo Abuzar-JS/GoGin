@@ -25,9 +25,29 @@ func (u *UserController) GetUser() gin.HandlerFunc {
 }
 
 func (u *UserController) CreateUser() gin.HandlerFunc {
+	type UserBody struct {
+		Name   string `json:"name"`
+		Status bool   `json:"status"`
+	}
+
 	return func(c *gin.Context) {
+		var userBody UserBody
+		if err := c.BindJSON(&userBody); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		user, err := u.UserService.CreateUserService(userBody.Name, userBody.Status)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err,
+			})
+			return
+		}
 		c.JSON(200, gin.H{
-			"User": "Create User Request",
+			"user": user,
 		})
 	}
 }
