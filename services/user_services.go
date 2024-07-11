@@ -15,15 +15,10 @@ func (u *UserService) InitService(db *gorm.DB) {
 	u.db = db
 }
 
-type User struct {
-	Id   int
-	Name string
-}
-
-func (u *UserService) GetUserService() ([]*internal.User, error) {
+func (u *UserService) GetUserService(status bool) ([]*internal.User, error) {
 	var users []*internal.User
 
-	if err := u.db.Find(&users).Error; err != nil {
+	if err := u.db.Where("status = ?", status).Find(&users).Error; err != nil {
 		return nil, err
 	}
 
@@ -45,4 +40,38 @@ func (u *UserService) CreateUserService(name string, status bool) (*internal.Use
 		return nil, err
 	}
 	return user, nil
+}
+
+func (u *UserService) UpdateUserService(name string, status bool, id int) (*internal.User, error) {
+
+	var user *internal.User
+
+	if err := u.db.Where("id = ?", id).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	user.Name = name
+	user.Status = status
+
+	if err := u.db.Save(&user).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (u *UserService) DeleteUserService(id int64) error {
+
+	var user *internal.User
+
+	if err := u.db.Where("id = ?", id).First(&user).Error; err != nil {
+		return err
+	}
+
+	if err := u.db.Where("id = ?", id).Delete(&user).Error; err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }

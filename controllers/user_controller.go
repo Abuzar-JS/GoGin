@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"GinMod/services"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,11 +15,18 @@ func (u *UserController) InitUserControllerRoutes(router *gin.Engine) {
 	users := router.Group("/user")
 	users.GET("/", u.GetUser())
 	users.POST("/", u.CreateUser())
+	users.PUT("/", u.UpdateUser())
+	users.DELETE("/:id", u.DeleteUser())
 }
 
 func (u *UserController) GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		users, err := u.UserService.GetUserService()
+
+		status := c.Query("status")
+		if status == "" {
+			status = "true"
+		}
+		actualStatus, err := strconv.ParseBool(status)
 
 		if err != nil {
 			c.JSON(400, gin.H{
@@ -27,9 +35,17 @@ func (u *UserController) GetUser() gin.HandlerFunc {
 			return
 
 		}
-		c.JSON(200, gin.H{
 
-			"users": users,
+		users, err := u.UserService.GetUserService(actualStatus)
+		if err != nil {
+			c.JSON(400, gin.H{
+
+				"message": err.Error(),
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"user": users,
 		})
 	}
 
@@ -59,6 +75,61 @@ func (u *UserController) CreateUser() gin.HandlerFunc {
 		}
 		c.JSON(200, gin.H{
 			"user": user,
+		})
+	}
+}
+
+func (u *UserController) UpdateUser() gin.HandlerFunc {
+	type UserBody struct {
+		Name   string `json:"name"`
+		Status bool   `json:"status"`
+		Id     int    `json:"id" binding:"required"`
+	}
+
+	return func(c *gin.Context) {
+		var userBody UserBody
+		if err := c.BindJSON(&userBody); err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		user, err := u.UserService.UpdateUserService(userBody.Name, userBody.Status, userBody.Id)
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err,
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"user": user,
+		})
+	}
+}
+
+func (u *UserController) DeleteUser() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		id := c.Param("id")
+		userId, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			c.JSON(404, gin.H{
+				"message": err,
+			})
+			return
+		}
+
+		err = u.UserService.DeleteUserService(userId)
+		if err != nil {
+			c.JSON(404, gin.H{
+				"message": err,
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"message": "User Deleted Successfully!",
 		})
 	}
 }
