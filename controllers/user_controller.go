@@ -18,10 +18,21 @@ func (u *UserController) InitUserControllerRoutes(router *gin.Engine) {
 
 func (u *UserController) GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		users, err := u.UserService.GetUserService()
+
+		if err != nil {
+			c.JSON(400, gin.H{
+				"message": err.Error(),
+			})
+			return
+
+		}
 		c.JSON(200, gin.H{
-			"User": u.UserService.GetUserService(),
+
+			"users": users,
 		})
 	}
+
 }
 
 func (u *UserController) CreateUser() gin.HandlerFunc {

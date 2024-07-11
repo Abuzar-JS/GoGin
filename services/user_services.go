@@ -15,8 +15,20 @@ func (u *UserService) InitService(db *gorm.DB) {
 	u.db = db
 }
 
-func (u *UserService) GetUserService() string {
-	return "Get User Request "
+type User struct {
+	Id   int
+	Name string
+}
+
+func (u *UserService) GetUserService() ([]*internal.User, error) {
+	var users []*internal.User
+
+	if err := u.db.Find(&users).Error; err != nil {
+		return nil, err
+	}
+
+	return users, nil
+
 }
 
 func (u *UserService) CreateUserService(name string, status bool) (*internal.User, error) {
