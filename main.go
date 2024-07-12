@@ -22,7 +22,10 @@ func main() {
 
 	userController := &controllers.UserController{UserService: *userService}
 	userController.InitUserControllerRoutes(router)
-	authController := controllers.InitAuthController()
+
+	authService := services.InitAuthService(db)
+
+	authController := controllers.InitAuthController(authService)
 	authController.InitRoutes(router)
 
 	router.Run(":8000")
