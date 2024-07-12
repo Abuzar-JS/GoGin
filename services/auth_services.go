@@ -28,8 +28,12 @@ func (a *AuthService) Login(email *string, password *string) (*internal.UserAuth
 
 	var user internal.UserAuth
 
-	if err := a.db.Where("email=?", email).Where("password=?").Find(&user).Error; err != nil {
+	if err := a.db.Where("email=?", email).Where("password=?", password).Find(&user).Error; err != nil {
 		return nil, err
+	}
+
+	if user.Email == "" {
+		return nil, errors.New("No user found with this email.")
 	}
 
 	return &user, nil
