@@ -14,6 +14,7 @@ type UserController struct {
 func (u *UserController) InitUserControllerRoutes(router *gin.Engine) {
 	users := router.Group("/user")
 	users.GET("/", u.GetUser())
+	// users.GET("/:id", u.GetUserById())
 	users.POST("/", u.CreateUser())
 	users.PUT("/", u.UpdateUser())
 	users.DELETE("/:id", u.DeleteUser())
@@ -23,33 +24,43 @@ func (u *UserController) GetUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		status := c.Query("status")
-		if status == "" {
-			status = "true"
-		}
-		actualStatus, err := strconv.ParseBool(status)
+		var actualStatus *bool
+		if status != "" {
+			aS, err := strconv.ParseBool(status)
+			actualStatus = &aS
+			if err != nil {
+				c.JSON(400, gin.H{
+					"message": err.Error(),
+				})
+				return
+			}
 
-		if err != nil {
-			c.JSON(400, gin.H{
-				"message": err.Error(),
+			users, err := u.UserService.GetUserService(actualStatus)
+			if err != nil {
+				c.JSON(400, gin.H{
+
+					"message": err.Error(),
+				})
+				return
+			}
+			c.JSON(200, gin.H{
+				"user": users,
 			})
-			return
-
 		}
 
-		users, err := u.UserService.GetUserService(actualStatus)
-		if err != nil {
-			c.JSON(400, gin.H{
-
-				"message": err.Error(),
-			})
-			return
-		}
-		c.JSON(200, gin.H{
-			"user": users,
-		})
 	}
-
 }
+
+// func (u *UserController) GetUserById() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		id := c.Param("id")
+// 		userId, err := strconv.ParseInt(id, 10, 64)
+// 		if err != nil {
+// 			c.JSON(404, gin.H{})
+// 		}
+
+// 	}
+// }
 
 func (u *UserController) CreateUser() gin.HandlerFunc {
 	type UserBody struct {

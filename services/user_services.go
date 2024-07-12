@@ -15,10 +15,15 @@ func (u *UserService) InitService(db *gorm.DB) {
 	u.db = db
 }
 
-func (u *UserService) GetUserService(status bool) ([]*internal.User, error) {
+func (u *UserService) GetUserService(status *bool) ([]*internal.User, error) {
 	var users []*internal.User
 
-	if err := u.db.Where("status = ?", status).Find(&users).Error; err != nil {
+	query := u.db
+	if status != nil {
+		query = query.Where("status = ?", status)
+	}
+
+	if err := query.Find(&users).Error; err != nil {
 		return nil, err
 	}
 
