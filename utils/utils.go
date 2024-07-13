@@ -10,6 +10,7 @@ const (
 	DefaultCost int = 10 // the cost that will actually be set if a cost below MinCost is passed into GenerateFromPassword
 )
 
+// Func Hash password
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), MinCost)
 	return string(bytes), err
