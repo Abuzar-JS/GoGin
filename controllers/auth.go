@@ -24,7 +24,7 @@ func (a *AuthController) InitRoutes(router *gin.Engine) {
 
 func (a *AuthController) Register() gin.HandlerFunc {
 	type RegisterBody struct {
-		Email    string `json:"email" binding: "required"`
+		Email    string `json:"email" binding:"required"`
 		Password string `json:"password" binding:"required"`
 	}
 
@@ -48,14 +48,13 @@ func (a *AuthController) Register() gin.HandlerFunc {
 		c.JSON(200, gin.H{
 			"message": user,
 		})
-		return
 
 	}
 }
 
 func (a *AuthController) Login() gin.HandlerFunc {
 	type RegisterBody struct {
-		Email    string `json:"email" binding: "required"`
+		Email    string `json:"email" binding:"required"`
 		Password string `json:"password" binding:"required"`
 	}
 
@@ -77,9 +76,9 @@ func (a *AuthController) Login() gin.HandlerFunc {
 		}
 
 		c.JSON(200, gin.H{
-			"message": user,
+			"email":   user.Email,
+			"message": "Login Successfully",
 		})
-		return
 
 	}
 }
