@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"GinMod/middleware"
 	"GinMod/services"
 	"strconv"
 
@@ -13,8 +14,8 @@ type UserController struct {
 
 func (u *UserController) InitUserControllerRoutes(router *gin.Engine) {
 	users := router.Group("/user")
+	users.Use(middleware.CheckMiddleware)
 	users.GET("/", u.GetUser())
-	// users.GET("/:id", u.GetUserById())
 	users.POST("/", u.CreateUser())
 	users.PUT("/", u.UpdateUser())
 	users.DELETE("/:id", u.DeleteUser())
