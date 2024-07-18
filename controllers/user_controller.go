@@ -52,17 +52,6 @@ func (u *UserController) GetUser() gin.HandlerFunc {
 	}
 }
 
-// func (u *UserController) GetUserById() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		id := c.Param("id")
-// 		userId, err := strconv.ParseInt(id, 10, 64)
-// 		if err != nil {
-// 			c.JSON(404, gin.H{})
-// 		}
-
-// 	}
-// }
-
 func (u *UserController) CreateUser() gin.HandlerFunc {
 	type UserBody struct {
 		Name   string `json:"name"`
