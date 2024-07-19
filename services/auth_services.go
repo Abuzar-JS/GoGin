@@ -45,6 +45,7 @@ func (a *AuthService) Login(email *string, password *string) (*internal.UserAuth
 	return &user, nil
 }
 
+// Register
 func (a *AuthService) Register(email *string, password *string) (*model.UserAuth, error) {
 	if email == nil {
 		return nil, errors.New("email can't be null")
