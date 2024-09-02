@@ -134,3 +134,5 @@ func (u *UserController) DeleteUser() gin.HandlerFunc {
 		})
 	}
 }
+
+
